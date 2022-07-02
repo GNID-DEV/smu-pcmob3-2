@@ -8,12 +8,25 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
-export default function NotesScreen({ navigation }) {
+// const db = SQLite.openDatabase("notes.db");
+
+export default function NotesScreen({ navigation, route }) {
  const [notes, setNotes] = useState([
    { title: "List 1", done: false, id: "0" },
    { title: "List 2", done: false, id: "1" },
    { title: "List 3", done: false, id: "2" },
  ]);
+
+ useEffect(() => {
+  if(route.params?.text) {
+    const newNote = {
+      title: route.params.text,
+      done: false,
+      id: notes.length.toString(),
+    };
+    setNotes([...notes, newNote]);
+  }
+}, [route.params?.text]);
 
  useEffect(() => {
    navigation.setOptions({
@@ -29,6 +42,8 @@ export default function NotesScreen({ navigation }) {
      ),
    });
  });
+
+
 
  function addNote() {
    navigation.navigate("Add Note");
