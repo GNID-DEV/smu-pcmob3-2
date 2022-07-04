@@ -1,91 +1,148 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
- StyleSheet,
- Text,
- View,
- FlatList,
- TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import * as SQLite from "expo-sqlite";
+import * as FileSystem from "expo-file-system";
 
-// const db = SQLite.openDatabase("notes.db");
+const db = SQLite.openDatabase("notes.db");
+console.log(FileSystem.documentDirectory);
 
 export default function NotesScreen({ navigation, route }) {
- const [notes, setNotes] = useState([
-   { title: "List 1", done: false, id: "0" },
-   { title: "List 2", done: false, id: "1" },
-   { title: "List 3", done: false, id: "2" },
- ]);
+  const [notes, setNotes] = useState([]);
 
- useEffect(() => {
-  if(route.params?.text) {
-    const newNote = {
-      title: route.params.text,
-      done: false,
-      id: notes.length.toString(),
-    };
-    setNotes([...notes, newNote]);
+  function refreshNotes() {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM notes",
+        null,
+        (txObj, { rows: { _array } }) => setNotes(_array),
+        (txObj, error) => console.log(`Error: ${error}`)
+      );
+    });
   }
-}, [route.params?.text]);
 
- useEffect(() => {
-   navigation.setOptions({
-     headerRight: () => (
-       <TouchableOpacity onPress={addNote}>
-         <Entypo
-           name="new-message"
-           size={24}
-           color="black"
-           style={{ marginRight: 20 }}
-         />
-       </TouchableOpacity>
-     ),
-   });
- });
+  // Set up and connect to database
+  useEffect(() => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS notes
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          done INT)
+        `
+        );
+      },
+      null,
+      refreshNotes
+    );
+  }, []);
 
+  // New Task iCon (header top right button)
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={addNote}>
+          <Ionicons
+            name="add-circle"
+            size={30}
+            // Got issue when park fontSize under styles 
+            style={{
+              color: "#BF8D7A",
+              marginRight: 10,
+            }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  });
 
+  // Monitor route.params for changes and update items to the database
+  useEffect(() => {
+    if (route.params?.text) {
+      db.transaction(
+        (tx) => {
+          tx.executeSql("INSERT INTO notes (done, title) VALUES (0, ?)", [
+            route.params.text,
+          ]);
+        },
+        null,
+        refreshNotes
+      );
+    }
+  }, [route.params?.text]);
 
- function addNote() {
-   navigation.navigate("Add Note");
- }
+  function addNote() {
+    navigation.navigate("Add Screen");
+  }
 
- function renderItem({ item }) {
-   return (
-     <View
-       style={{
-         padding: 10,
-         paddingTop: 20,
-         paddingBottom: 20,
-         borderBottomColor: "#ccc",
-         borderBottomWidth: 1,
-       }}
-     >
-       <Text style={{ textAlign: "left", fontSize: 16 }}>{item.title}</Text>
-     </View>
-   );
- }
+  // This deletes an individual note
+  function deleteNote(id) {
+    console.log("Deleting " + id);
+    db.transaction(
+      (tx) => {
+        tx.executeSql(`DELETE FROM notes WHERE id=${id}`);
+      },
+      null,
+      refreshNotes
+    );
+  }
 
- return (
-   <View style={styles.container}>
-     <FlatList
-       style={{ width: "100%" }}
-       data={notes}
-       renderItem={renderItem}
-     />
-   </View>
- );
+  // The function to render each row in our FlatList
+  function renderItem({ item }) {
+    return (
+      <View
+        style={{
+          paddingLeft: 30,
+          paddingRight: 10,
+          paddingTop: 20,
+          paddingBottom: 20,
+          borderBottomColor: "#ccc",
+          borderBottomWidth: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={{ fontSize: 18 }}
+
+        >{item.title}</Text>
+        <TouchableOpacity onPress={() => deleteNote(item.id)}>
+          <Ionicons 
+            name="ios-trash-bin"          
+            style={{
+              fontSize: 20,
+              color: "#36403E",   
+              marginRight: 5,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={notes}
+        renderItem={renderItem}
+        style={{ width: "100%" }}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
- container: {
-   flex: 1,
-   backgroundColor: "#ffc",
-   alignItems: "center",
-   justifyContent: "center",
- },
+  container: {
+    flex: 1,
+    backgroundColor: "#9BB9BF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
-
-
-
-
-

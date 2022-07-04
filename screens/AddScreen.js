@@ -1,78 +1,81 @@
 import React, { useState } from "react";
-import { Text, TextInput, View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 
-export default function AddScreen({ route, navigation }) {
-  
+export default function AddScreen({ navigation }) {
   const [text, setText] = useState("");
- 
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={styles.label}>Add your todo</Text>
-      
+    // Title txt 
+    <View style={[styles.container, { backgroundColor: "#9BB9BF" }]}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#36403E'}}>What do you want to add?</Text>
+    
+    {/* Input field */}
       <TextInput
         style={styles.textInput}
         value={text}
-        onChangeText={(newText) => setText(newText)}
-      ></TextInput>
+        onChangeText={(input) => setText(input)}
+      />
       
-      <View style={styles.buttons}>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          // onPress={() => navigation.goBack()}
+          style={styles.button}
           onPress={() => navigation.navigate("Notes", { text })}
-          style={[styles.button, styles.submitButton]}
         >
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
-        
+       
         <TouchableOpacity
+          style={styles.button}
           onPress={() => navigation.goBack()}
-          style={[styles.button, styles.cancelButton]}
         >
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
- 
-      <Text style={{ marginTop: 40, color: "grey" }}>
-        This is what you typed:
-      </Text>
-      <Text style={{ color: "#333", marginTop: 10 }}>{text}</Text>
+      {/* <Text>{text.toUpperCase()}</Text> */}
     </View>
   );
- }
- 
- const styles = StyleSheet.create({
-  label: {
-    fontWeight: "bold",
-    fontSize: 24,
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ffc",
+    alignItems: "center",
+    justifyContent: "center",
   },
+
   textInput: {
-    margin: 20,
+    borderColor: "#36403E",
+    borderRadius: 0,
     borderWidth: 1,
     width: "80%",
-    padding: 10,
-    borderColor: "#ccc",
+    padding: 15,
+    marginTop: 10,
   },
-  buttons: {
-    flexDirection: "row",
-  },
+  
   button: {
     padding: 10,
-    margin: 5,
+    backgroundColor: "#36403E",
+    borderRadius: 0,
+    borderColor: "#734136",
+    margin: 10,
+    marginTop: 20,
+    width: 140,
   },
+  
   buttonText: {
-    fontWeight: "bold",
-    color: "white",
+    color: "#BF8D7A",
+    fontWeight: "500",
+    textAlign: "center",
   },
-  submitButton: {
-    backgroundColor: "orange",
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: 'space-between',
   },
-  cancelButton: {
-    backgroundColor: "red",
-  },
- });
- 
- 
- 
- 
-
-
+});
