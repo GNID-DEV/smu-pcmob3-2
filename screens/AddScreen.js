@@ -12,32 +12,26 @@ export default function AddScreen({ navigation }) {
 
   return (
     // Title txt 
-    <View style={[styles.container, { backgroundColor: "#9BB9BF" }]}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#36403E'}}>What do you want to add?</Text>
+    <View style={[styles.container, { backgroundColor: "#D9BBB4" }]}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#260E0B'}}>What do you want to do?</Text>
     
     {/* Input field */}
-      <TextInput
-        style={styles.textInput}
-        value={text}
-        onChangeText={(input) => setText(input)}
-      />
+      <TextInput style={styles.textInput} value={text} onChangeText={(input) => setText(input)} />
       
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Notes", { text })}
-        >
+    
+    {/* Save button */}
+        <TouchableOpacity style={[styles.button, {backgroundColor:"#A63C58"} ]} onPress={() => navigation.navigate("Notes", { text })}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
-       
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.goBack()}
-        >
+    
+    {/* Cancel Button */}
+        <TouchableOpacity style={[styles.button, {backgroundColor:"#593A28"} ]} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
+      
       </View>
-      {/* <Text>{text.toUpperCase()}</Text> */}
+      
     </View>
   );
 }
@@ -70,7 +64,7 @@ const styles = StyleSheet.create({
   },
   
   buttonText: {
-    color: "#BF8D7A",
+    color: "#F2C6AC",
     fontWeight: "500",
     textAlign: "center",
   },

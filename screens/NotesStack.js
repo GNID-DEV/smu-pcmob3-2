@@ -15,13 +15,13 @@ export default function NotesStack() {
           
           headerStyle: {
             
-            height: 100,
-            backgroundColor: "#36403E",
+            height: 120,
+            backgroundColor: "#A63C58",
             shadowColor: "black",
             shadowOpacity: 0.8,
             shadowRadius: 3,
           },
-          headerTintColor: "#9BB9BF",
+          headerTintColor: "#D9BBB4",
           headerTitleStyle: {
             fontSize: 21,
             fontWeight: "bold",

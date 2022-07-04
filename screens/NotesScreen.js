@@ -54,7 +54,7 @@ export default function NotesScreen({ navigation, route }) {
             size={30}
             // Got issue when park fontSize under styles 
             style={{
-              color: "#BF8D7A",
+              color: "#F2C6AC",
               marginRight: 10,
             }}
           />
@@ -103,8 +103,8 @@ export default function NotesScreen({ navigation, route }) {
           paddingRight: 10,
           paddingTop: 20,
           paddingBottom: 20,
-          borderBottomColor: "#ccc",
-          borderBottomWidth: 1,
+          borderBottomColor: "#8C8274",
+          borderBottomWidth: 0.3,
           flexDirection: "row",
           justifyContent: "space-between",
         }}
@@ -114,10 +114,10 @@ export default function NotesScreen({ navigation, route }) {
         >{item.title}</Text>
         <TouchableOpacity onPress={() => deleteNote(item.id)}>
           <Ionicons 
-            name="ios-trash-bin"          
+            name="backspace"          
             style={{
-              fontSize: 20,
-              color: "#36403E",   
+              fontSize: 24,
+              color: "#A63C58",   
               marginRight: 5,
             }}
           />
@@ -141,7 +141,7 @@ export default function NotesScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9BB9BF",
+    backgroundColor: "#D9C7B8",
     alignItems: "center",
     justifyContent: "center",
   },
